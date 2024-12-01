@@ -2,7 +2,7 @@ Resources:
   MyEC2Instance:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-04dd4500af104442f
+      ImageId: ami-0ed83e7a78a23014e
       InstanceType: t2.micro
       Tags:
         - Key: stage
