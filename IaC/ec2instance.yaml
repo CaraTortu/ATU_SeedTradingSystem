@@ -1,0 +1,9 @@
+Resources:
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-04dd4500af104442f
+      InstanceType: t2.micro
+      Tags:
+        - Key: stage
+          Value: production
