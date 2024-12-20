@@ -8,7 +8,7 @@ type Item struct {
 
 // Storage will store all the items that the user has bought
 type Storage struct {
-	Items   []Item
+	Items   map[Item]int
 	Balance int
 }
 
@@ -23,25 +23,31 @@ var Items = []Item{
 var ItemsAmount = len(Items)
 
 // NewStorage will create a new storage
-func NewStorage() Storage {
+func NewStorage(balance int) Storage {
 	return Storage{
-		Items:   []Item{},
-		Balance: 0,
+		Items:   make(map[Item]int),
+		Balance: balance,
 	}
 }
 
 // AddItem will add an item to the storage
 func (s *Storage) AddItem(item Item) {
-	s.Items = append(s.Items, item)
+	if _, ok := s.Items[item]; ok {
+		s.Items[item]++
+		return
+	}
+	s.Items[item] = 1
 }
 
 // RemoveItem will remove an item from the storage
 func (s *Storage) RemoveItem(item *Item) (deleted bool) {
-	for i, v := range s.Items {
-		if v == *item {
-			s.Items = append(s.Items[:i], s.Items[i+1:]...)
-			return true
+	if _, ok := s.Items[*item]; ok {
+		s.Items[*item]--
+		if s.Items[*item] == 0 {
+			delete(s.Items, *item)
 		}
+
+		return true
 	}
 
 	return false
@@ -59,12 +65,7 @@ func (s *Storage) BuyItem(item Item) (success bool) {
 }
 
 // HasItem will check if the storage has the item
-func (s *Storage) HasItem(item Item) (index int) {
-	for i, v := range s.Items {
-		if v == item {
-			return i
-		}
-	}
-
-	return -1
+func (s *Storage) HasItem(item Item) (has_item bool) {
+	_, ok := s.Items[item]
+	return ok
 }
